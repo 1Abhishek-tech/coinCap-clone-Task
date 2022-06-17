@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/coinCap-clone-Task/static/css/main.e6c13ad2.css",
-    "main.js": "/coinCap-clone-Task/static/js/main.6841a982.js",
+    "main.css": "/coinCap-clone-Task/static/css/main.67422e16.css",
+    "main.js": "/coinCap-clone-Task/static/js/main.c39347c6.js",
     "static/js/787.48d2f87a.chunk.js": "/coinCap-clone-Task/static/js/787.48d2f87a.chunk.js",
     "index.html": "/coinCap-clone-Task/index.html",
-    "main.e6c13ad2.css.map": "/coinCap-clone-Task/static/css/main.e6c13ad2.css.map",
-    "main.6841a982.js.map": "/coinCap-clone-Task/static/js/main.6841a982.js.map",
+    "main.67422e16.css.map": "/coinCap-clone-Task/static/css/main.67422e16.css.map",
+    "main.c39347c6.js.map": "/coinCap-clone-Task/static/js/main.c39347c6.js.map",
     "787.48d2f87a.chunk.js.map": "/coinCap-clone-Task/static/js/787.48d2f87a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6c13ad2.css",
-    "static/js/main.6841a982.js"
+    "static/css/main.67422e16.css",
+    "static/js/main.c39347c6.js"
   ]
 }
