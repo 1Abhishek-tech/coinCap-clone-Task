@@ -1,21 +1,29 @@
-import React, {  } from "react";
+import React, { useState } from "react";
 import {Navbar, Container,Nav, Button ,NavDropdown ,FormControl , Form} from 'react-bootstrap';
+import {Input} from 'elementz';
+import { Icon } from '@iconify/react';
+
 
 export const AppNavbar = () => {
+  const [isLoading,setLoading] = useState({
+    'search': false,
+    'edit': false,
+    'custom': false
+  });
   return (
-    <Navbar bg="light" expand="lg" className="fluid ">
+    <div className="fluid bg-white">
+    <Navbar  expand="lg" className="container ">
     <Container fluid >
-      {/* <Navbar.Brand href="#">Navbar scroll</Navbar.Brand> */}
       <Navbar.Toggle aria-controls="navbarScroll" />
       <Navbar.Collapse id="navbarScroll">
         <Nav
-          className="me-auto my-2 my-lg-0"
+          className="me-auto my-2 my-lg-0 z"
           style={{ maxHeight: '100px' }}
           navbarScroll
         >
-          <Nav.Link href="#action1">Coins</Nav.Link>
-          <Nav.Link href="#action2">Exchange</Nav.Link>
-          <Nav.Link href="#action2">Swap</Nav.Link>
+          <Nav.Link href="#Coins">Coins</Nav.Link>
+          <Nav.Link href="#Exchange">Exchange</Nav.Link>
+          <Nav.Link href="#Swap">Swap</Nav.Link>
         </Nav>
         <Container>
     <Navbar.Brand href="#home" className="d-flex justify-content-center">
@@ -28,17 +36,23 @@ export const AppNavbar = () => {
       />
     </Navbar.Brand>
   </Container>
-        <Form className="d-flex ">
-          <FormControl
-            type="search"
-            placeholder="Search"
-            className="me-2"
-            aria-label="Search"
+  <div className="nav__right">
+      <Input
+        loading={isLoading.search}
+        before={
+          <Icon icon="akar-icons:search" color="black" width="15 "/>
+        }
+        placeholder='Search something'
+        onChange={(e)=>(
+          setLoading({...isLoading, search: !isLoading.search})
+          )}
           />
-          <Button variant="outline-success">Search</Button>
-        </Form>
-      </Navbar.Collapse>
+        <Icon icon="uiw:setting" color="black" width="20 " className="nav__right_icon"/>
+        <button type="button" class="btn btn_nav">Connect Wallet</button>
+        </div>
+          </Navbar.Collapse>
     </Container>
   </Navbar>
+  </div>
   )
 }

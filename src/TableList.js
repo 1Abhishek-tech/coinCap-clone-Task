@@ -36,29 +36,31 @@ export const TableList = () => {
     loading: false,
   });
   const [selected, setSelected] = useState([]);
+  const [items, setItems] = useState(50);
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState([]);
+  const [ButtonDisabled, setButtonDisabled] = useState(false);
 
-  var headers = [
-    { label: "Name", key: "name" },
-    { label: "Price", key: "priceUsd" },
-    { label: "Market Cap", key: "marketCapUsd" },
-    { label: "VWAP(24Hr)", key: "vwap24Hr" },
-    { label: "Supply", key: "supply" },
-    { label: "Volume (24Hr)", key: "volumeUsd24Hr" },
-    { label: "Change (24Hr)", key: "changePercent24Hr" },
-  ];
+  const viewMore = () => {
+    setButtonDisabled(true)
+    setItems(items+50)
+    fetchCheckEmail()
+    setButtonDisabled(false)
+    console.log(items)
+  };
+
   const fetchCheckEmail = async () => {
-    setLoading(true);
-    const response = await axios(`https://api.coincap.io/v2/assets`).catch((err) =>
+    // setLoading(true);
+    const response = await axios(`https://api.coincap.io/v2/assets?limit=${items}`).catch((err) =>
     console.log(err)
     );
     // console.log(response.data.data)
     if(response){
           const data = response.data.data.map((item,i) => { 
-          const { rank ,name, priceUsd ,marketCapUsd,vwap24Hr, supply, volumeUsd24Hr,changePercent24Hr } = item ;
+          const { rank ,symbol, name, priceUsd ,marketCapUsd,vwap24Hr, supply, volumeUsd24Hr,changePercent24Hr } = item ;
           return {
             rank,
+            symbol : symbol.toLowerCase(),
             name : name,
             // name : ` ${<img src="https://assets.coincap.io/assets/icons/eth@2x.png" alt="img" /> } `  + name,
             priceUsd : `$${ parseFloat(priceUsd).toFixed(2) }`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") ,
@@ -71,11 +73,13 @@ export const TableList = () => {
         });
         // console.log(data)
         setCheckEmail(data);
-        setLoading(false);
+        // setLoading(false);
     }
   };
   useEffect(() => {
+    setLoading(true);
     fetchCheckEmail();
+    setLoading(false);
   }, [setCheckEmail]);
 
 
@@ -83,7 +87,13 @@ export const TableList = () => {
     rank: {
       title: "Rank",
     },
-    name: {
+    symbol : {
+      title : "Icon",
+      onRender: (symbol , row, i)=>(
+        <img src={`https://assets.coincap.io/assets/icons/${symbol}@2x.png`} alt="hey" width={28}/>
+      )
+    },
+    name  : {
       title: "Name",
     },
     priceUsd: {
@@ -103,6 +113,11 @@ export const TableList = () => {
     },
     changePercent24Hr: {
       title: "Change (24Hr)",
+      onRender: (changePercent24Hr, row, i)=>(
+        <div className={`${changePercent24Hr>"0" ? 'text-success' : 'text-danger'}`} >
+          {changePercent24Hr }
+        </div>
+      )
     },
   };
 
@@ -112,7 +127,7 @@ export const TableList = () => {
   }
   return (
     <>
-      <div className="center  flex flex-column container">
+      <div className="TableList center  flex flex-column container">
         <Table
           columns={memoizedColumns}
           data={config.empty ? [] : checkEmail}
@@ -121,7 +136,7 @@ export const TableList = () => {
           filterable={config.filterable}
           selectable={!config.selectable}
           paginate={!config.scrollable}
-          limit={50}
+          limit={50+items}
           scrollable={config.scrollable ? "500px" : false}
           fixed={!config.fixed}
           loading={config.loading}
@@ -129,37 +144,11 @@ export const TableList = () => {
           onExpand={(row, i) => <span>Oh, You expanded me #{i}</span>}
           actionHidden
           selected={!selected}
-          // onSelectChange={(rows, selected) => {
-          //   // console.log(rows);
-          //   // setCsvSelected(rows);
-          //   setSelected(selected);
-          // }}
-          // onRowClick={(row, i) => {
-          //   const rowIndex = row.__ez__.index,
-          //     isNotSelected = selected.indexOf(rowIndex) === -1;
-
-          //   const updateSelectedDemo = isNotSelected
-          //     ? [...selected, rowIndex]
-          //     : [
-          //         ...selected.slice(0, selected.indexOf(rowIndex)),
-          //         ...selected.slice(
-          //           selected.indexOf(rowIndex) + 1,
-          //           selected.length
-          //         ),
-          //       ];
-
-          //   return setSelected(updateSelectedDemo);
- 
-          // }}
-          // onAction={(row, i, isBulk) => {
-          //   if (!isBulk)
-          //     return <Button sm simple icon="more-h" className="icon-bold" />;
-          //   // return (
-
-          //   // );
-          // }}
           onMobile={(row, i) => (
             <div className="pt-30 pb-30 m-auto">
+              <div>
+                <b>Rank.</b> {row.rank}
+              </div>
               <div>
                 <b>Name.</b> {row.name}
               </div>
@@ -185,7 +174,14 @@ export const TableList = () => {
           )}
         />
       </div>
-    </>
+      <div className="d-flex justify-content-center m-4 viewmore">
+      {ButtonDisabled ?
+      <Loading primary md isLoading={true} />
+      :
+      <button type="button" className="btn btn_nav " onClick={viewMore} disabled={ButtonDisabled}>View More</button>    
+    }
+      </div>
+      </>
   )
 }
 
